@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>AlzheimerOrNot</title>
+  <link href="{{ url_for('static',filename='styles/theme.css') }}" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&amp;display=swap" rel="stylesheet">
+
+  
+</head>
+<body style="background-color: red;">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" data-navbar-on-scroll="data-navbar-on-scroll">
+      <div class="container">
+        <a class="navbar-brand d-inline-flex" href="index.html">
+          <img class="d-inline-block"
+            src="{{ url_for('static',filename='images/logo.svg') }}" alt="logo" /><span
+            class="text-1000 fs-3 fw-bold ms-2 text-gradient">AlzheimerOrNot</span>
+          </a>
+       
+        </div>
+      </div>
+    </nav>
+    <section class="py-5 overflow-hidden bg-primary" id="home">
+      <div class="container">
+        <div class="row flex-center">
+          <div class="col-md-5 col-lg-6 order-0 order-md-1 mt-8 mt-md-0">
+            <a class="img-landing-banner" href="#!">
+            {% if imagefilepath %}
+              <img class="img-fluid" src="{{ url_for('static', filename=imagefilepath) }}" alt="hero-header" />
+            {% else %}
+              <img class="img-fluid" src="{{ url_for('static', filename='images/hero-header.png') }}" alt="hero-header" />
+            {% endif %}
+            </a>
+          </div>
+
+          <div class="col-md-7 col-lg-6 py-8 text-md-start text-center">
+            <h1 class="display-1 fs-md-5 fs-lg-6 fs-xl-8 text-light">Are you wondering?</h1>
+            <h1 class="text-800 mb-5 fs-4">What is stage of cancer you are?</h1>
+            <div class="card w-xxl-75">
+              <div class="card-body">
+                <div class="tab-content mt-3" id="nav-tabContent">
+                  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                    <form class=="p-3 text-center" action='/', method="post" enctype="multipart/form-data">
+                      <input class="form-control" type="file" name="imagefile">
+                      <input class="btn btn-primary mt-3" type="submit" value="Predict Image" style="background-color: #138bc2">
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+            <br />
+            {% if prediction %}
+            <h2 style="color: #616161">This image is : {{prediction}}</h2>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+</body>
+
+</html>
