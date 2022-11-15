@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request
-import tensorflow as tf
+# import tensorflow as tf
+import numpy as np
+from keras.models import load_model
+from tensorflow.keras.preprocessing import image
 
 class_names = ['MildDemented',
                'ModerateDemented',
@@ -8,26 +11,13 @@ class_names = ['MildDemented',
 
 app = Flask(__name__)
 
-model = tf.keras.models.load_model('./model_al.h5')     
+model = load_model('./model_al.h5')     
 
  # Create a function to load and prepare images
 def load_and_prep_image(filename, image_shape=224, scale=True):
-
-  # Read in the image
-  img = tf.io.read_file(filename)
-
-  # Decode image into tensor
-  img = tf.io.decode_image(img, channels=3)
-
-  # Resize the image
-  img = tf.image.resize(img, [image_shape, image_shape])
-
-  # Scale? Yes/No
-  if scale:
-    # rescale the image (get all values between 0 & 1)
-    return img/255.
-  else:
-    return img # don't need to rescale images for EfficientNet models in TensorFlow
+  img = image.load_img(filename, target_size=(image_shape, image_shape))
+  img = np.asarray(img)
+  return img/255.
 
 @app.route('/', methods=['GET'])
 def hello():
@@ -41,7 +31,7 @@ def predict():
     imagine = r"images/" + imagefile.filename 
 
     img = load_and_prep_image(image_path, scale=False)
-    pred_prob = model.predict(tf.expand_dims(img, axis=0))
+    pred_prob = model.predict(np.expand_dims(img, axis=0))
     pred_class = class_names[pred_prob.argmax()]
 
     final_prob = "{:.2f}".format(pred_prob.max()*100)
